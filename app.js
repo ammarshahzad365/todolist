@@ -1,5 +1,3 @@
-//mongodb atlas password: aLDtS8v:vFswN6j
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
