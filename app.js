@@ -11,7 +11,7 @@ if (port == null || port == "") {
 }
 
 const app = express();
-const password = process.env.ATLAS_PASSWORD;
+const password = process.env.MONGODB_ATLAS_PASSWORD;
 //mongoose.connect('mongodb://127.0.0.1:27017/todolistDB', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connect('mongodb+srv://ammarshahzad365:' + encodeURIComponent(password) +'@todolistcluster.mpajytd.mongodb.net/', {useNewUrlParser: true});
 
