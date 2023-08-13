@@ -4,13 +4,16 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const lodash = require("lodash");
-let port = process.env.PORT;
+require("dotenv").config();
+
+//for online deployments
+var port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
 }
 
 const app = express();
-const password = 'aLDtS8v:vFswN6j';
+const password = process.env.ATLAS_PASSWORD;
 //mongoose.connect('mongodb://127.0.0.1:27017/todolistDB', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connect('mongodb+srv://ammarshahzad365:' + encodeURIComponent(password) +'@todolistcluster.mpajytd.mongodb.net/', {useNewUrlParser: true});
 
@@ -74,17 +77,17 @@ app.post("/delete", function(req, res){
   if(listName==="Today"){
     Item.findByIdAndDelete(itemId).then(function(){
       console.log("Successfully deleted item from DB.");
-    })
 
-    res.redirect("/");
+      res.redirect("/");
+    })
 
   } else {
 
     List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: itemId}}}).then(function(){
       console.log("Successfully deleted item from list: " + listName);
-    });
 
-    res.redirect("/" + listName);
+      res.redirect("/" + listName);
+    });
   }
 });
 
@@ -101,13 +104,18 @@ app.post("/", function(req, res){
   });
 
   if(listName === "Today"){
-    newItem.save();
-    res.redirect("/");
+    newItem.save().then(function(){
+      console.log("Successfully saved item to DB.");
+      res.redirect("/");
+    });
+    
   } else {
       List.findOne({name: listName}).exec().then((foundList) => {
         foundList.items.push(newItem);
-        foundList.save();
-        res.redirect("/" + listName);
+        foundList.save().then(function(){
+          console.log("Successfully saved item to list: " + listName);
+          res.redirect("/" + listName);
+        });
     });
 }});
 
@@ -143,5 +151,5 @@ app.get("/about", function(req, res){
 
 //----------------------------------Server----------------------------------//
 app.listen(port, function() {
-  console.log("Server started on port 3000");
+  console.log("Server started on port " + port);
 });
