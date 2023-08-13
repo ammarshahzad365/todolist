@@ -63,7 +63,10 @@ app.get("/", function(req, res) {
       res.redirect("/"); //redirect to home route to display default items
     } else {
       res.render("list", {listTitle: "Today", newListItems: items}); //render list.ejs with items from DB
-    }});
+    }})
+    .catch(function(err){
+      console.log(err);
+    });
 });
 
 //Delete route
@@ -77,7 +80,9 @@ app.post("/delete", function(req, res){
       console.log("Successfully deleted item from DB.");
 
       res.redirect("/");
-    })
+    }).catch(function(err){
+      console.log(err);
+    });
 
   } else {
 
@@ -85,6 +90,8 @@ app.post("/delete", function(req, res){
       console.log("Successfully deleted item from list: " + listName);
 
       res.redirect("/" + listName);
+    }).catch(function(err){
+      console.log(err);
     });
   }
 });
@@ -105,6 +112,8 @@ app.post("/", function(req, res){
     newItem.save().then(function(){
       console.log("Successfully saved item to DB.");
       res.redirect("/");
+    }).catch(function(err){
+      console.log(err);
     });
     
   } else {
@@ -113,7 +122,11 @@ app.post("/", function(req, res){
         foundList.save().then(function(){
           console.log("Successfully saved item to list: " + listName);
           res.redirect("/" + listName);
+        }).catch(function(err){
+          console.log(err);
         });
+    }).catch(function(err){
+      console.log(err);
     });
 }});
 
